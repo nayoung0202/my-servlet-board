@@ -14,6 +14,7 @@ import java.io.PrintWriter;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+
 //Controller : 요청받고 적절한 페이지를 응답하는 것 -> 데이터를 해당 jsp 에 보내는 것이 request.setAttribute인 것
 @WebServlet("/board/*")
 public class BoardController extends HttpServlet {
@@ -78,21 +79,48 @@ public class BoardController extends HttpServlet {
 
         } else if (command.equals("/board/updateForm")) {
 //            response.sendRedirect("/view/board/updateForm.jsp");
+            Long id = Long.parseLong(request.getParameter("id"));
+            Board board = boardService.getBoard(id);
+
+            request.setAttribute("board", board);
             view += "updateForm.jsp";
 
+
         } else if (command.equals("/board/update")) {
-            response.sendRedirect("/view/member/join.jsp");
+            // 수정폼에서 보낸 데이터를 읽고 수정하라는 데이터를 수정한다.
+
+            //수정할 브라우저에 필요한 데이터를 가져온다.
+            //request를 통해 사용자에게 받은 데이터를 가져오는 것
+            Long id = Long.parseLong(request.getParameter("id"));
+            String title = request.getParameter("title");
+            String content = request.getParameter("content");
+            String writer = request.getParameter("writer");
+
+
+            // updateboard메소드를 통해 수정한 데이터를
+            boardService.updateBoard(new Board(id, title, content, writer, LocalDateTime.now(), 0, 0 ));
+
+            response.sendRedirect("/board/list");
+            return;
+
 
 
         } else if (command.equals("/board/delete")) {
-            response.sendRedirect("/view/member/login.jsp");
+            //삭제할 때 필요한 데이터는 id를 식별자로 삭제하기 때문에 id만 가져오고 다른 데이터 값은 null로 한다.
+            Long id = Long.parseLong(request.getParameter("id"));
+            boardService.deleteBoard(new Board(id, null, null, null, LocalDateTime.now(), 0, 0 ));
+
+
+            response.sendRedirect("/board/list");
+            return;
 
         } else if (command.contains("/board/detail")) {
             // /board/detail?id=3
             // id에 해당하는 게시판 하나를 가져와야 됨
-            //
 
 //            String quertyString = request.getQueryString();
+
+
             Long id = Long.parseLong(request.getParameter("id"));
             Board board = boardService.getBoard(id);
             //board 데이터를 detail.jsp에 전달하기 위해 어딘가에(request) 담아져서 와야한다.
@@ -100,6 +128,8 @@ public class BoardController extends HttpServlet {
 
             view += "detail.jsp";
 
+
+            
         }
 
         //뷰(페이지)를 응답하는 방법

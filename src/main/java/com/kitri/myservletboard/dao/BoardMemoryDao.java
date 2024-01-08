@@ -65,12 +65,13 @@ public class BoardMemoryDao implements BoardDao {
     @Override
     public void update(Board board) {
         Board board_ = getById(board.getId());
-        BoardMemoryDB.remove(board_);
-        BoardMemoryDB.add(board);
+        board_.setTitle(board.getTitle());
+        board_.setContent(board.getContent());
     }
 
     @Override
     public void delete(Board board) {
-        BoardMemoryDB.remove(board);
+        Board board_ = getById(board.getId());
+        BoardMemoryDB.remove(board_);
     }
 }

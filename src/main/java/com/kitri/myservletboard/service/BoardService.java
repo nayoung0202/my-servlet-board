@@ -23,7 +23,6 @@ public class BoardService {
         return boardDao.getById(id);
     }
     public ArrayList<Board> getBoards() {
-
         return boardDao.getAll();
     }
     public void addBoard(Board board) {
