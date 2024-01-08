@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
 
+//Controller : 요청받고 적절한 페이지를 응답하는 것 -> 데이터를 해당 jsp 에 보내는 것이 request.setAttribute인 것
 @WebServlet("/board/*")
 public class BoardController extends HttpServlet {
 
@@ -41,8 +42,10 @@ public class BoardController extends HttpServlet {
 //            response.addHeader("Refresh", "2; url = " + "/view/board/list.jsp");
 
             ArrayList<Board> boards = boardService.getBoards();
-            //jsp에게 넘겨줘야 함 - 게시판을 동적으로 만듦
+
             request.setAttribute("boards", boards);
+            // 데이터를 가져와 저장후 jsp에 넘겨주는 역할 -> dispatccher
+            //jsp에게 넘겨줘야 함 - 게시판을 동적으로 만듦
             view += "list.jsp";
 
         } else if (command.equals("/board/createForm")) {
@@ -64,11 +67,25 @@ public class BoardController extends HttpServlet {
 
         } else if (command.equals("/board/delete")) {
             response.sendRedirect("/view/member/login.jsp");
+
+        } else if (command.contains("/board/detail")) {
+            // /board/detail?id=3
+            // id에 해당하는 게시판 하나를 가져와야 됨
+            //
+
+//            String quertyString = request.getQueryString();
+            Long id = Long.parseLong(request.getParameter("id"));
+            Board board = boardService.getBoard(id);
+            //board 데이터를 detail.jsp에 전달하기 위해 어딘가에 담아져서 와야한다.
+            request.setAttribute("board", board);
+
+            view += "detail.jsp";
+
         }
 
         //뷰(페이지)를 응답하는 방법
             // 리다이렉트 : 클라이언트한테 재요청할 URL을 전달
-            // 포워드
+            // 포워드 :
         RequestDispatcher dispatcher = request.getRequestDispatcher(view);
         dispatcher.forward(request, response);
     }
