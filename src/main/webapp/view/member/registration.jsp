@@ -140,7 +140,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="nickname">비밀번호</label>
-                            <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력해주세요"
+                            <input type="password" class="form-control" id="nickname" placeholder="비밀번호를 입력해주세요"
                                 value="" required>
                             <div class="invalid-feedback">
                                 비밀번호를 입력해주세요.

@@ -14,6 +14,7 @@ public class BoardService {
 
 
     public static BoardService getInstance(){
+
         return instance;
     }
     //게시판 리스트 가져오는 로직
@@ -22,6 +23,7 @@ public class BoardService {
         return boardDao.getById(id);
     }
     public ArrayList<Board> getBoards() {
+
         return boardDao.getAll();
     }
     public void addBoard(Board board) {

@@ -5,6 +5,7 @@ import com.kitri.myservletboard.data.Board;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+
 public class BoardMemoryDao implements BoardDao {
     private static final BoardMemoryDao instance = new BoardMemoryDao();
 
@@ -40,6 +41,24 @@ public class BoardMemoryDao implements BoardDao {
 
     @Override
     public void save(Board board) {
+        // id 자동 생성 로직 (단, id가 기존의 id와 중복되지 않게)
+
+
+        Long id = 0L;
+        boolean flag = false;
+        while (!flag) {
+            flag = true;
+            id ++;
+            for (Board board1 : BoardMemoryDB) {
+                if (board1.getId() == id) {
+                    // id 중복
+                    flag = false;
+                    break;
+                };
+            }// 1~10까지 break 되지 않고 계속 while문을 돌다가 10이 지나면 flag가 true가 되고 while문을 나오게 된다.
+            // 중복이 없을 때
+        }
+        board.setId(id);
         BoardMemoryDB.add(board);
     }
 
