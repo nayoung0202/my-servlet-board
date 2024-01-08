@@ -120,11 +120,11 @@
                 <h4 class="mb-3"><b>게시물 수정</b></h4>
                 <hr>
                 <br>
-                <form class="validation-form" novalidate>
+                <form class="validation-form" novalidate action="/board/update" method="post">
 
                     <div class="mb-3">
                         <label for="address">제목</label>
-                        <input type="text" class="form-control" id="title" placeholder="제목을 입력해주세요" required>
+                        <input name="title" type="text" value="${board.getTitle()}" class="form-control" id="address" placeholder="제목을 입력해주세요" required>
                         <div class="invalid-feedback">
                             제목을 입력해주세요.
                         </div>
@@ -133,35 +133,37 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="name">작성자</label>
-                            <input type="text" class="form-control" id="name" placeholder="" value="" required>
+                            <input name="writer" type="text" class="form-control" id="name" placeholder="" value="${board.getWriter()}" required>
                             <div class="invalid-feedback">
                                 작성자를 입력해주세요.
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="name">비밀번호</label>
-                            <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력해주세요"
-                                value="" required>
-                            <div class="invalid-feedback">
-                                비밀번호를 입력해주세요.
-                            </div>
-                        </div>
+<%--                        <div class="col-md-6 mb-3">--%>
+<%--                            <label for="name">비밀번호</label>--%>
+<%--                            <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력해주세요"--%>
+<%--                                value="" required>--%>
+<%--                            <div class="invalid-feedback">--%>
+<%--                                비밀번호를 입력해주세요.--%>
+<%--                            </div>--%>
+<%--                        </div>--%>
                     </div>
+
+<%--                 수정한 값을 다시 detail로 보내기 위해서는 id라는 식별자로 구분해야 하기 때문에 필요하다--%>
+                    <input type="text" name="id" value="${board.getId()}" hidden>
                     <div class="mb-3">
-                        <label for="contents" class="form-label">내용</label>
-                        <textarea name="contents" class="form-control" cols="30" rows="5"
-                            placeholder="내용을 입력해주세요"></textarea>
+                        <label for="content" class="form-label">내용</label>
+                        <textarea name="content" class="form-control" cols="30" rows="5" id="content"
+                            placeholder="내용을 입력해주세요">${board.getContent()}</textarea>
                     </div>
                     <br>
                     <div class="row">
                         <div class="col-md-6 mb-3">
-                            <button class="btn btn-secondary btn-block" type="submit">게시물 등록하기</button>
+                            <button class="btn btn-secondary btn-block" type="submit">게시물 수정하기</button>
                         </div>
                         <div class="col-md-6 mb-3">
                             <button class="btn btn-secondary btn-block" type="submit">취소</button>
                         </div>
                     </div>
-            </div>
 
             </form>
         </div>
@@ -191,4 +193,7 @@
         }, false);
     </script>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3b
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
+</html>

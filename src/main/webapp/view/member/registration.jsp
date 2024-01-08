@@ -140,7 +140,7 @@
                     <div class="row">
                         <div class="col-md-6 mb-3">
                             <label for="nickname">비밀번호</label>
-                            <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력해주세요"
+                            <input type="password" class="form-control" id="nickname" placeholder="비밀번호를 입력해주세요"
                                 value="" required>
                             <div class="invalid-feedback">
                                 비밀번호를 입력해주세요.
@@ -193,8 +193,6 @@
                             <button class="btn btn-secondary btn-block" type="submit">취소</button>
                         </div>
                     </div>
-            </div>
-
             </form>
         </div>
     </div>
@@ -223,4 +221,7 @@
         }, false);
     </script>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3b
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
+
+</html>
