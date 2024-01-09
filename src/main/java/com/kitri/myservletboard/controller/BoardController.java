@@ -11,6 +11,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @WebServlet("/board/*")
@@ -52,7 +53,14 @@ public class BoardController extends HttpServlet {
             view += "createForm.jsp";
 
         } else if (command.equals("/board/create")) {
-            response.sendRedirect("/view/member/registration.jsp");
+            String content = request.getParameter("content");
+            String title = request.getParameter("title");
+            String writer = request.getParameter("writer");
+
+            Board board = new Board(null, title,content, writer, LocalDateTime.now(), 0, 0);
+            boardService.addBoard(board);
+            response.sendRedirect("/board/list");
+            return;
 
         } else if (command.equals("/board/updateForm")) {
 //            response.sendRedirect("/view/board/updateForm.jsp");
@@ -66,6 +74,9 @@ public class BoardController extends HttpServlet {
             response.sendRedirect("/view/member/login.jsp");
 
         } else if (command.equals("/board/detail")) {
+            Board board = boardService.getBoard(Long.parseLong(request.getParameter("id")));
+            request.setAttribute("board", board);
+            view += "detail.jsp";
 
         }
 

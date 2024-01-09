@@ -80,7 +80,7 @@
 
 <body>
   <header>
-    <a class="logo" href="/board/list.jsp"><img src="https://poiemaweb.com/img/logo.png"></a>
+    <a class="logo" href="/board/list"><img src="https://poiemaweb.com/img/logo.png"></a>
     <nav>
       <ul class="nav-items">
         <li><a href="/board/list">게시글목록</a></li>
@@ -125,7 +125,7 @@
         </tbody>
       </table>
       <div>
-        <a href="createForm.jsp" role="button" class="btn btn-outline-dark">글쓰기</a>
+        <a href="/board/createForm" role="button" class="btn btn-outline-dark">글쓰기</a>
       </div>
       <div class="d-flex justify-content-center">
       <nav aria-label="Page navigation example">

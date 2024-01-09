@@ -124,7 +124,7 @@
 
                     <div class="mb-3">
                         <label for="address">제목</label>
-                        <input type="text" class="form-control" id="title" placeholder="제목을 입력해주세요" required>
+                        <input type="text" class="form-control" id="address" placeholder="제목을 입력해주세요" required>
                         <div class="invalid-feedback">
                             제목을 입력해주세요.
                         </div>
@@ -138,18 +138,18 @@
                                 작성자를 입력해주세요.
                             </div>
                         </div>
-                        <div class="col-md-6 mb-3">
-                            <label for="name">비밀번호</label>
-                            <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력해주세요"
-                                value="" required>
-                            <div class="invalid-feedback">
-                                비밀번호를 입력해주세요.
-                            </div>
-                        </div>
+<%--                        <div class="col-md-6 mb-3">--%>
+<%--                            <label for="name">비밀번호</label>--%>
+<%--                            <input type="password" class="form-control" id="password" placeholder="비밀번호를 입력해주세요"--%>
+<%--                                value="" required>--%>
+<%--                            <div class="invalid-feedback">--%>
+<%--                                비밀번호를 입력해주세요.--%>
+<%--                            </div>--%>
+<%--                        </div>--%>
                     </div>
                     <div class="mb-3">
                         <label for="contents" class="form-label">내용</label>
-                        <textarea name="contents" class="form-control" cols="30" rows="5"
+                        <textarea name="contents" class="form-control" id="contents" cols="30" rows="5"
                             placeholder="내용을 입력해주세요"></textarea>
                     </div>
                     <br>
@@ -161,7 +161,6 @@
                             <button class="btn btn-secondary btn-block" type="submit">취소</button>
                         </div>
                     </div>
-            </div>
 
             </form>
         </div>
@@ -191,4 +190,5 @@
         }, false);
     </script>
 </body>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js" integrity="sha384-HwwvtgBNo3b
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm" crossorigin="anonymous"></script>
