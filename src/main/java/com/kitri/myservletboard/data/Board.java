@@ -1,8 +1,5 @@
 package com.kitri.myservletboard.data;
 
-import com.kitri.myservletboard.dao.BoardMemoryDao;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Board {
@@ -14,7 +11,7 @@ public class Board {
     int viewCount;
     int commentCount;
 
-    public Board(){
+    public Board(String title, String content){
 
     }
 
@@ -26,6 +23,10 @@ public class Board {
         this.createdAt = createdAt;
         this.viewCount = viewCount;
         this.commentCount = commentCount;
+    }
+
+    public Board() {
+
     }
 
     public Long getId() {

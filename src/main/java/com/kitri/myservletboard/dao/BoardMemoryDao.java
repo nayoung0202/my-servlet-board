@@ -5,6 +5,8 @@ import com.kitri.myservletboard.data.Board;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
+//저장소를 관리하는 객체(클래스)
+
 
 public class BoardMemoryDao implements BoardDao {
     private static final BoardMemoryDao instance = new BoardMemoryDao();
@@ -13,6 +15,7 @@ public class BoardMemoryDao implements BoardDao {
         return instance;
     }
     ArrayList<Board> BoardMemoryDB = new ArrayList<>();
+    //자바에서 사용하는 자료구조
 
     private BoardMemoryDao() {
         BoardMemoryDB.add(new Board(1L, "첫 번째 글!!", "반갑습니다", "손흥민", LocalDateTime.now(), 10, 2));
