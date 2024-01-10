@@ -1,6 +1,7 @@
 package com.kitri.myservletboard.dao;
 
 import com.kitri.myservletboard.data.Board;
+import com.kitri.myservletboard.data.Pagination;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -46,6 +47,9 @@ public class BoardMemoryDao implements BoardDao {
     public void save(Board board) {
         // id 자동 생성 로직 (단, id가 기존의 id와 중복되지 않게)
 
+        //id는 0부터 시작하고 flag는 false로 시작 -> flag가 false이므로 while문을 들어간다.
+        // while문에 들어간 falg는 true가 되고 id가 중복되면 while문을 계속 돌고 중복되지 않으면 flag가 false가 되지않고 true인 채로 break 되어 빠져나온다.
+        // while문을 빠져나온 id는 board에 저장되고 BoardMemoryDB에 추가된다.
 
         Long id = 0L;
         boolean flag = false;
@@ -76,5 +80,11 @@ public class BoardMemoryDao implements BoardDao {
     public void delete(Board board) {
         Board board_ = getById(board.getId());
         BoardMemoryDB.remove(board_);
+    }
+
+    //interface에 Pagination을 추가해서 오류나지 않게 넣어만 준다.
+    @Override
+    public ArrayList<Board> getAll(Pagination pagination) {
+        return null;
     }
 }
