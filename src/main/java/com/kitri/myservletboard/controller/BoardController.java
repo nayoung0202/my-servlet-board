@@ -1,6 +1,7 @@
 package com.kitri.myservletboard.controller;
 
 import com.kitri.myservletboard.data.Board;
+import com.kitri.myservletboard.data.Pagination;
 import com.kitri.myservletboard.service.BoardService;
 
 import javax.servlet.RequestDispatcher;
@@ -46,11 +47,32 @@ public class BoardController extends HttpServlet {
 //            response.sendRedirect("/view/board/list.jsp");
 //            response.addHeader("Refresh", "2; url = " + "/view/board/list.jsp");
 
-            ArrayList<Board> boards = boardService.getBoards();
+            //*(2)pagination!!=> page id 가져오기 -> /board/list?page = 3 을 읽어야 됨
+            String page = request.getParameter("page");
+
+            //page의 값이 아무것도 없을 경우
+            if (page == null) {
+                page ="1";
+            }
+
+            // 가져와서 쓸 수 있게 paginaiton을 선언
+            Pagination pagination = new Pagination(Integer.parseInt(page));
+
+
+            ArrayList<Board> boards = boardService.getBoards(pagination);
+
+            //*(3) pagination 정보를 가져와서 페이지바의 활성화 비활성화를 결정
+            request.setAttribute("pagination", pagination);
+
+            // 전체 조회를 하는 Boards의 길이 (size)를 받아서 전체 레코드의 수 가져오기
+//            pagination.setTotalRecords(boardService.getBoards(Integer.parseInt()));
+
 
             request.setAttribute("boards", boards);
             // 데이터를 가져와 저장후 jsp에 넘겨주는 역할 -> dispatccher
             //jsp에게 넘겨줘야 함 - 게시판을 동적으로 만듦
+
+
             view += "list.jsp";
 
         } else if (command.equals("/board/createForm")) {
@@ -79,12 +101,17 @@ public class BoardController extends HttpServlet {
 
         } else if (command.equals("/board/updateForm")) {
 //            response.sendRedirect("/view/board/updateForm.jsp");
+            // 게시판 수정하기
             Long id = Long.parseLong(request.getParameter("id"));
+            //detail.jsp에서 id 받아옴
             Board board = boardService.getBoard(id);
+            // request를 통해 브라우저에서 id를 받아오고 board 변수 생성하고 boardService에서 id의 값을 처리한다. ( boardService에 가서 boardDao에 갔다가 boardDao를 상속받은 BoardMemory 또는 BoardJdbcDao로 가서 getbyId 로 처리한다.
+
+
 
             request.setAttribute("board", board);
+            //처리한 id를 board에 넣는다.
             view += "updateForm.jsp";
-
 
         } else if (command.equals("/board/update")) {
             // 수정폼에서 보낸 데이터를 읽고 수정하라는 데이터를 수정한다.
@@ -97,10 +124,11 @@ public class BoardController extends HttpServlet {
             String writer = request.getParameter("writer");
 
 
-            // updateboard메소드를 통해 수정한 데이터를
+            // updateboard메소드를 통해 수정된 데이터 ( boardService로 가서 boardService에서 BoardDao에 갔다가 상속받은 BoardMemory 또는 BoardJdbcDao에서 처리한다.)를 받아서 boardService에 덮어쓰기 한다.(업데이트)
             boardService.updateBoard(new Board(id, title, content, writer, LocalDateTime.now(), 0, 0 ));
 
             response.sendRedirect("/board/list");
+            // 처리가 끝나면 list.jsp로 돌아간다.
             return;
 
 
@@ -108,8 +136,11 @@ public class BoardController extends HttpServlet {
         } else if (command.equals("/board/delete")) {
             //삭제할 때 필요한 데이터는 id를 식별자로 삭제하기 때문에 id만 가져오고 다른 데이터 값은 null로 한다.
             Long id = Long.parseLong(request.getParameter("id"));
-            boardService.deleteBoard(new Board(id, null, null, null, LocalDateTime.now(), 0, 0 ));
+            // 브라우저에서 id를 가져온다.
 
+            boardService.deleteBoard(new Board(id, null, null, null, LocalDateTime.now(), 0, 0 ));
+            //boardService에 가서 BoardDao로 가고 BoardDao를 상속받은 BoardMemory 또는 BoardJdbcDao로 간다.
+            // BoardMemory로 간 id는 delete를 처리한다.
 
             response.sendRedirect("/board/list");
             return;
@@ -124,16 +155,16 @@ public class BoardController extends HttpServlet {
             Long id = Long.parseLong(request.getParameter("id"));
             Board board = boardService.getBoard(id);
             //board 데이터를 detail.jsp에 전달하기 위해 어딘가에(request) 담아져서 와야한다.
+            // request로 브라우저에 id 값을 가져온다.
+            // boardService를 통해
             request.setAttribute("board", board);
 
             view += "detail.jsp";
 
-
-            
         }
 
         //뷰(페이지)를 응답하는 방법
-            // 리다이렉트 : 클라이언트한테 재요청할 URL을 전달
+            // 리다이렉트 : 클라이언트한테 재요청할 URL을 직접 전달
             // 포워드 :
         RequestDispatcher dispatcher = request.getRequestDispatcher(view);
         dispatcher.forward(request, response);

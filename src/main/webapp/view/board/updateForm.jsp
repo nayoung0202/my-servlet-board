@@ -18,6 +18,8 @@
                 <hr>
                 <br>
                 <form class="validation-form" novalidate action="/board/update" method="post">
+                    <%--action을 통해 /board/update로 post로 입력받은 데이터 값을 보낸다.--%>
+                    <%--input 태그안에 value를 지정하여 value="${board.getTitle()}"으로 값을 받아온다.--%>
 
                     <div class="mb-3">
                         <label for="address">제목</label>
