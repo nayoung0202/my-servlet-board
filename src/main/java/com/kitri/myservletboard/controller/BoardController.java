@@ -2,6 +2,7 @@ package com.kitri.myservletboard.controller;
 
 import com.kitri.myservletboard.data.Board;
 import com.kitri.myservletboard.data.BoardService;
+import org.graalvm.compiler.core.common.LIRKind;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -9,6 +10,7 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.swing.plaf.basic.BasicOptionPaneUI;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
@@ -63,11 +65,26 @@ public class BoardController extends HttpServlet {
             return;
 
         } else if (command.equals("/board/updateForm")) {
+            //수정 폼 내보내기
 //            response.sendRedirect("/view/board/updateForm.jsp");
+            Long id = Long.parseLong(request.getParameter("id"));
+            Board board = boardService.getBoard(id);
+
+            //상세페이지를 채우는 로직
+            request.setAttribute("board", board);
             view += "updateForm.jsp";
 
         } else if (command.equals("/board/update")) {
-            response.sendRedirect("/view/member/join.jsp");
+            Long id = Long.parseLong(getInitParameter("id"));
+            String content = request.getParameter("content");
+            String title = request.getParameter("title");
+            String writer = request.getParameter("writer");
+
+            Board board = new Board(id, title, content, writer, LocalDateTime.now(), 0, 0);
+            
+
+
+
 
 
         } else if (command.equals("/board/delete")) {
