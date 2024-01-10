@@ -12,6 +12,7 @@ import java.time.format.SignStyle;
 import java.util.ArrayList;
 
 public class BoardJdbcDao implements BoardDao{
+    //싱글톤 생성
     private static final BoardJdbcDao instance = new BoardJdbcDao();
 
 
@@ -19,40 +20,48 @@ public class BoardJdbcDao implements BoardDao{
         //boardService에서 생성된 BoardjdbcDao의 싱글톤을 가져옴
         return instance;
     }
-
     private BoardJdbcDao() {
     }
+    //싱글톤 생성자를 써야 완벽한 싱글톤을 구현하는 로직이다.
 
+    // connectDB 메소드 만들어서 servlet 과 DB 연결
     public Connection connectDB() {
         //DB와 연결
         Connection conn = null;
 
         //쿼리를 날리기 위해서는 try-catch를 사용 -> 쿼리는
         try {
-            //forName : 원하는 위치의 클래스를 로드 시키는 것
+            //forName : 원하는 위치의 클래스를 로드 시키는 것 => Driver를 로드 시키는 것
             Class.forName("com.mysql.cj.jdbc.Driver");
 
-            //url, user, pwd 필요 -> 왜? :
+            //url, user, pwd 필요 -> 왜? : 연결하려면 기본으로 필요한 정보 (내 정보)
+            //if, orcle이면 오라클에 맞는 정보를 입력해야 한다.
             String url ="jdbc:mysql://localhost:3306/my_servlet_board";
             String user = "root";
             String pwd = "1234";
             conn = DriverManager.getConnection(url, user, pwd);
+            //연결하기 위해서는 드라이버매니저에 정보 3개가 꼭 들어가야한다.
         }catch (Exception e){
             //연결 오류시 잡는 것
             e.printStackTrace();
         }
         return conn;
-        //Connection 객체가 담긴 객체를 리턴..?
+        //Connection 객체가 담긴 드라이버 매니저를 리턴
+        // 예외가 없으면 리턴되어 디비와 연결됨
     }
 
     @Override
     public ArrayList<Board> getAll(Pagination pagination) {
-        Connection connection = null;
-        PreparedStatement ps = null;
-        ResultSet rs = null;
+        //ArrayList 가 리턴타입이고 Pagination pagination 매개변수 자리 -> 따라서 자료를 디비에서 가져와 어레이리스트로 리턴
+        //전체조회
+        Connection connection = null; //커넥션을 맺기 위한 코드
+        PreparedStatement ps = null; //쿼리를 날리기 위한 코드
+        ResultSet rs = null; // 결과 출력을 받기 위한 코드
+        // 2줄은 무조건 필요하며 rs는 결과를 받을 메소드에서만 필요
 
 
         ArrayList<Board> boards = new ArrayList<>();
+        //boards에 있는 모든 데이터를 출력해줘야 하기 때문에
 
         //쿼리 날릴 때는 try catch 써야 됨
         try {
@@ -60,6 +69,7 @@ public class BoardJdbcDao implements BoardDao{
             //가고자 하는 페이지의 값을 알기 위해선 pagination에 있는 page에서 값을 가져온다.
             //sql에서 2페이지로 가려면 10~20 페이지이기 때문에 10,10으로 쓰면 된다. -> 10번부터 10개의 정보를 불러오는 것 : 앞에는 동적인 데이터 : "?"로 나타낸다.
             String sql = "SELECT * FROM board LIMIT ?,?";
+            //(1,2)
             // 한 페이지에 나올 게시물 갯수를 정적에서 동적으로 변경
 
             ps = connection.prepareStatement(sql);
@@ -116,13 +126,17 @@ public class BoardJdbcDao implements BoardDao{
 
         //쿼리 날릴 때는 try catch 써야 됨
         try {
-            connection = connectDB();
-            String sql = "SELECT * FROM board";
-            ps = connection.prepareStatement(sql);
-            rs = ps.executeQuery(sql);
+            connection = connectDB(); // DB에 연결
+            String sql = "SELECT * FROM board"; //쿼리를 날림 -> DB에 원하는 정보 가져오라는 명령
+            ps = connection.prepareStatement(sql); // 쿼리에 sql을 담아서 DB와 연결
+            // sql 자리에 쿼리문을 바로 작성해도 되지만 반복 사용하므로 따로 빼줌
+            rs = ps.executeQuery(sql); // DB에서 가져온 요청한 결과값을 rs에 저장함
+            //excuteQuery가 결과값을 실행하는 명령 -> 공통
 
             //컬럼 단위로 읽음
+            //rs에 담긴 자료 읽는 것
             while (rs.next()){
+                //rs에 있는 자료가 없어질 때 까지 while 문이 돌아감
                 Long id = rs.getLong("id");
                 String title = rs.getString("title");
                 String content = rs.getString("content");
@@ -130,9 +144,14 @@ public class BoardJdbcDao implements BoardDao{
                 LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
                 int viewCount = rs.getInt("view_count");
                 int commentCount = rs.getInt("comment_count");
+                //괄호 안에는 무조건 소문자!!
 
+                //만든 어레이리스트 Board에 저장
+                //DB에서 가져온 정보를 Board로 새롭게 객체 생성하여 저장함
                 boards.add(new Board(id, title, content, writer, createdAt, viewCount, commentCount));
+                //Board에 담아서 조회할 때 저장된 자료를 보여줌
             }
+            //지역변수 : 리턴할 때 Board를 try catch안에 ArrayList Board를 선언하면 리턴할 때 쓰지 못하므로 위에 선언함
 
         }catch (Exception e){
 
@@ -142,6 +161,7 @@ public class BoardJdbcDao implements BoardDao{
                 rs.close();
                 ps.close();
                 connection.close();
+                //순서 중요 저장한 순서대로 역순으로 닫음
 
             }catch ( Exception e){
                 e.printStackTrace();
@@ -149,6 +169,7 @@ public class BoardJdbcDao implements BoardDao{
         }
 
         return boards;
+        //리턴 boards를 해서 getAll()을 요청하면 boards를 줌
     }
 
     @Override
@@ -164,7 +185,9 @@ public class BoardJdbcDao implements BoardDao{
         ResultSet rs = null;
 
 
-        Board Board = new Board();
+        Board board = null;
+        //리턴할 때 board를 반환해야 하므로 전역변수로 선언해줌
+        //위에서는 ArrayList이므로 board를 add로 저장하고, 여기에서는 new로 객체 생성후 저장해야 됨
         try {
             connection = connectDB();
             //상세 페이지를 구현하기 위해서는 id가 필요하기 때문에 id =? 로 id가져오기
@@ -173,7 +196,9 @@ public class BoardJdbcDao implements BoardDao{
             String sql = "SELECT * FROM board WHERE id = ?";
             ps = connection.prepareStatement(sql);
             ps.setLong(1, id);
+            //동적으로 사용하기 위해 ?로 채워줌
             rs = ps.executeQuery();
+            //동적으로 처리할 때는 sql를 빼줌
 
             // ResultSet은 next()메서드를 제공한다. -> next()를 통해 브라우저에서 입력받은 데이터 값을 가져온다.
             while (rs.next()) {
@@ -186,10 +211,9 @@ public class BoardJdbcDao implements BoardDao{
                 int commentCount = rs.getInt("comment_count");
 
                 // 브라우저에서 입력받은 데이터를 new Board로 생성자를 생성하여 저장한다.
-                Board board_ = new Board(id, title, content, writer, createdAt, viewCount, commentCount);
-                return  board_;
+                board = new Board(id, title, content, writer, createdAt, viewCount, commentCount);
+                //add 노필요
             }
-
 
         } catch (Exception e) {
         }
@@ -204,7 +228,7 @@ public class BoardJdbcDao implements BoardDao{
                 e.printStackTrace();
             }
         }
-        return Board;
+        return  board;
     }
 
     @Override
@@ -220,7 +244,10 @@ public class BoardJdbcDao implements BoardDao{
             connection = connectDB();
             String insertsql = "INSERT INTO board (title, content, writer) VALUES (?,?,?)";
 //            rs = ps.executeQuery(insertsql);
+            //원하는 쿼리문만 가져오고 동적으로 적용하기 위해 ?로 명령함
             ps = connection.prepareStatement(insertsql);
+            //쿼리를 insertsql을 DB로 보냄
+            // 순서 : DB연결시키고 요청 쿼리문 날리고 결과값 받아옴
 
                 connection = connectDB();
 
@@ -247,6 +274,8 @@ public class BoardJdbcDao implements BoardDao{
 
     @Override
     public void update(Board board) {
+        //리턴이 void이므로 리턴 값 없음
+        // 업데이트폼 요청할 때 끌고올 정보가 board에 있으므로 매개변수에 board객체를 넣어줘야 됨
         // 수정하기
         Connection connection = null;
         PreparedStatement ps = null;
@@ -273,6 +302,7 @@ public class BoardJdbcDao implements BoardDao{
             try {
                 ps.close();
                 connection.close();
+                //연결하고 쿼리문 날렸으므로 쿼리문 먼저 닫고 연결 닫음
 
             }catch ( Exception e){
                 e.printStackTrace();
@@ -283,6 +313,8 @@ public class BoardJdbcDao implements BoardDao{
 
     @Override
     public void delete(Board board) {
+        //반환할 값이 필요없으므로 void 사용
+        // 삭제폼에 필요한 정보를 가져와 삭제함
         Connection connection = null;
         PreparedStatement ps = null;
 
@@ -305,6 +337,7 @@ public class BoardJdbcDao implements BoardDao{
 
             }catch ( Exception e){
                 e.printStackTrace();
+                //예외처리하기 위한 명령어
             }
         }
     }
@@ -313,6 +346,8 @@ public class BoardJdbcDao implements BoardDao{
     // SELECT count(*) FROM board;
     //실제 내보내는 쿼리에 해당하는
     public int count(){
+        //리턴값 int -> int인 count 반환
+        //count값을 요청하면 가져가기 위해 리턴값 필요
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
