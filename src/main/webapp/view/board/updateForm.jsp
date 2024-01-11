@@ -120,11 +120,11 @@
                 <h4 class="mb-3"><b>게시물 수정</b></h4>
                 <hr>
                 <br>
-                <form class="validation-form" novalidate>
-
+                <form class="validation-form" novalidate action="/board/update" method="post">
+                    <input name="id" value="${board.getId()}" hidden>
                     <div class="mb-3">
                         <label for="address">제목</label>
-                        <input type="text" class="form-control" id="address" value="${board.getTitle()}" placeholder="제목을 입력해주세요" required>
+                        <input name="title" type="text" class="form-control" id="address" value="${board.getTitle()}" placeholder="제목을 입력해주세요" required>
                         <div class="invalid-feedback">
                             제목을 입력해주세요.
                         </div>
@@ -148,8 +148,8 @@
 <%--                        </div>--%>
                     </div>
                     <div class="mb-3">
-                        <label for="contents" class="form-label">내용</label>
-                        <textarea name="contents" class="form-control" id="contents" cols="30" rows="5"
+                        <label for="content" class="form-label">내용</label>
+                        <textarea name="content" class="form-control" id="content" cols="30" rows="5"
                             placeholder="내용을 입력해주세요">${board.getContent()}</textarea>
                     </div>
                     <br>

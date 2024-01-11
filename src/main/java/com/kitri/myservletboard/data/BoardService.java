@@ -24,6 +24,13 @@ public class BoardService {
     public Board getBoard(Long id){
         return boardDao.getById(id);
     }
+    public void updateBoard(Board board){
+        boardDao.update(board);
+    }
+
+    public void deleteBoard(Board board){
+        boardDao.delete(board);
+    }
 
 
 }

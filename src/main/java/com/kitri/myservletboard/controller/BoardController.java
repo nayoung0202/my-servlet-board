@@ -2,7 +2,6 @@ package com.kitri.myservletboard.controller;
 
 import com.kitri.myservletboard.data.Board;
 import com.kitri.myservletboard.data.BoardService;
-import org.graalvm.compiler.core.common.LIRKind;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -10,7 +9,6 @@ import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.swing.plaf.basic.BasicOptionPaneUI;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.time.LocalDateTime;
@@ -75,20 +73,28 @@ public class BoardController extends HttpServlet {
             view += "updateForm.jsp";
 
         } else if (command.equals("/board/update")) {
+            Long id = Long.parseLong(request.getParameter("id"));
+            String content = request.getParameter("content");
+            String title = request.getParameter("title");
+
+
+            boardService.updateBoard(new Board(id,title, content, null, LocalDateTime.now(), 0 , 0));
+            //writer는 바꾸지 않기 때문에 null값을 주지 않아도 된다.
+
+            response.sendRedirect("/board/list");
+            return;
+
+        } else if (command.equals("/board/delete")) {
             Long id = Long.parseLong(getInitParameter("id"));
             String content = request.getParameter("content");
             String title = request.getParameter("title");
             String writer = request.getParameter("writer");
 
-            Board board = new Board(id, title, content, writer, LocalDateTime.now(), 0, 0);
-            
+            boardService.deleteBoard(new Board(id,content, title, writer, LocalDateTime.now(), 0, 0));
 
+            response.sendRedirect("/board/list");
+            return;
 
-
-
-
-        } else if (command.equals("/board/delete")) {
-            response.sendRedirect("/view/member/login.jsp");
 
         } else if (command.equals("/board/detail")) {
             Board board = boardService.getBoard(Long.parseLong(request.getParameter("id")));
