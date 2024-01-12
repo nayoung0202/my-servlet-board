@@ -51,7 +51,6 @@ public class BoardJdbcDao implements BoardDao{
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-
         ArrayList<Board> boards = new ArrayList<>();
 
         //쿼리 날릴 때는 try catch 써야 됨
@@ -101,7 +100,6 @@ public class BoardJdbcDao implements BoardDao{
                 e.printStackTrace();
             }
         }
-
         return boards;
     }
 
@@ -157,7 +155,7 @@ public class BoardJdbcDao implements BoardDao{
         // connection
         // ps -> executeQuery();
         // excutequery : 수행결과로 ResultSet 객체의 값을 반환
-        // rs : ResultSet -> Statement를 통해 받아온 값을 저장
+        // rs : ResultSet -> PreparedStatement를 통해 받아온 값을 저장 (DB 쿼리 결과값)
 
         Connection connection = null;
         PreparedStatement ps = null;
@@ -167,7 +165,7 @@ public class BoardJdbcDao implements BoardDao{
         Board Board = new Board();
         try {
             connection = connectDB();
-            //상세 페이지를 구현하기 위해서는 id가 필요하기 때문에 id =? 로 id가져오기
+            //상세 페이지를 구현하기 위해서는 id가 필요하기 때문에 id = ? 로 id가져오기
             // ? 나중에 값을 대입하겠다는 의미 => id가 계속 달라지기 때문에 (동적)
             // 물음표 갯수대로 대체하는 것
             String sql = "SELECT * FROM board WHERE id = ?";
@@ -177,6 +175,7 @@ public class BoardJdbcDao implements BoardDao{
 
             // ResultSet은 next()메서드를 제공한다. -> next()를 통해 브라우저에서 입력받은 데이터 값을 가져온다.
             while (rs.next()) {
+                //쿼리 결과값 만큼 while문을 돌게된다.
 //                id = rs.getLong("id"); -> 위에 ps.setLong(1, id); 을 통해 id를 선언했기 때문에 없어도 된다.
                 String title = rs.getString("title");
                 String writer = rs.getString("writer");
@@ -346,4 +345,120 @@ public class BoardJdbcDao implements BoardDao{
         }
         return count;
     }
+
+    @Override
+    public ArrayList<Board> getAll(String search, String keyword, Pagination pagination) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+        ResultSet rs = null;
+
+        ArrayList<Board> boards = new ArrayList<>();
+
+
+        if (search == null){
+            search = "title";
+        }
+        if (keyword == null){
+            keyword = "";
+        }
+
+
+        //쿼리 날릴 때는 try catch 써야 됨
+        try {
+            connection = connectDB();
+
+            String sql = "SELECT * FROM board WHERE "+ search + " LIKE " + "'%" + keyword + "%'" + " LIMIT ?,?";
+            //            SELECT  * from board where title like "%파리%";
+            // title 또는 writer 의 정보를 search에서 받고 sql에 쿼리에 넣기 +로 작성한다.
+            //띄어쓰기 주의!! -> LIKE 와 같은 쿼리를 쌍따음표 사이에 공백을 넣어줘야 한다. 원래 sql 명령문에도 공백이 있기 때문이다.
+            // 한 문장으로 작성할 경우에는 작은 따음표가 붙어져서 나오기 때문에 쌍따음표로 넣어줘야한다.
+
+
+            ps = connection.prepareStatement(sql);
+
+
+            ps.setInt(1,(pagination.getPage() -1) * pagination.getMaxRecordsPerPage());
+            ps.setInt(2, pagination.getMaxRecordsPerPage());
+
+
+
+            rs = ps.executeQuery();
+            System.out.println(rs);
+
+            while (rs.next()) {
+                //쿼리 결과값 만큼 while문을 돌게된다.
+                Long id = rs.getLong("id");
+                String title = rs.getString("title");
+                String writer = rs.getString("writer");
+                String content = rs.getString("content");
+                LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
+                int viewCount = rs.getInt("view_count");
+                int commentCount = rs.getInt("comment_count");
+
+                // 브라우저에서 입력받은 데이터를 new Board로 생성자를 생성하여 저장한다.
+                boards.add(new Board(id, title, content, writer, createdAt, viewCount, commentCount));
+            }
+
+
+        }catch (Exception e){
+
+        } finally {
+            //무조건 실행
+            try {
+                rs.close();
+                ps.close();
+                connection.close();
+
+            }catch ( Exception e){
+                e.printStackTrace();
+            }
+        }
+        return boards;
+    }
+
+    public int count(String search, String keyword) {
+        if (keyword == null) {
+            // 전체조회
+            return count();
+        } else {
+            Connection connection = null;
+            PreparedStatement ps = null;
+            ResultSet rs = null;
+
+            int count = 0;
+
+            try {
+                connection = connectDB();
+                String sql;
+                if(search.equals("title")){
+                    sql = "SELECT count(*) FROM board WHERE title LIKE ?";
+                } else {
+                    sql = sql = "SELECT count(*) FROM board WHERE writer LIKE ?";
+                }
+//                String sql = "SELECT count(*) FROM board WHERE " + search + " LIKE ?"+'%';
+                //String sql = "SELECT * FROM board WHERE "+ search + " LIKE " + "'%" + keyword + "%'" + " LIMIT ?,?";
+                ps = connection.prepareStatement(sql);
+                ps.setString(1,keyword);
+                rs = ps.executeQuery();
+
+                rs.next(); //DB에서 쿼리 실행하면 나오는 결과값 (총 게시글 갯수)
+
+                count = rs.getInt("count(*)");
+
+            }catch (Exception e){
+
+            } finally {
+                //무조건 실행
+                try {
+                    rs.close();
+                    ps.close();
+                    connection.close();
+
+                }catch ( Exception e){
+                    e.printStackTrace();
+                }
+            }
+            return count;
+        }
+    };
 }

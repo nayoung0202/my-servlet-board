@@ -56,19 +56,24 @@
         <ul class="pagination pagination-sm">
 
 
+
           <%--pagination에서 hasNext, hasPrev를 getter를 만들어 준다.--%>
           <%-- pagination은 이미 선언되어 있어서 뒤에서 또 쓸 수 있다.--%>
           <%
             Pagination pagination = (Pagination) request.getAttribute("pagination");
+            String search = (String) request.getAttribute("search");
+            String keyword = (String) request.getAttribute("keyword");
             if (pagination.isHasPrev()){
           %>
+
+
             <li class="page-item">
               <%--첫 번째 페이지에서 -1을 하면 이전 페이지로 이동--%>
-              <a class="page-link" href="/board/list?page=<%=pagination.getStartPageOnScreen()-1%>" tabindex="-1" aria-disabled="true">Previous</a>
+              <a class="page-link" href="/board/list?page=<%=pagination.getStartPageOnScreen()-1%>&search=<%=search%>&keyword=<%=keyword%>" tabindex="-1" aria-disabled="true">Previous</a>
             </li>
           <%} else {%>
             <li class="page-item disabled">
-            <a class="page-link" href="/board/list?page=<%=pagination.getStartPageOnScreen()-1%>" tabindex="-1" aria-disabled="true">Previous</a>
+            <a class="page-link" href="/board/list?page=<%=pagination.getStartPageOnScreen()-1%>&search=<%=search%>&keyword=<%=keyword%>" tabindex="-1" aria-disabled="true">Previous</a>
         <%}%>
 
 
@@ -76,10 +81,10 @@
           for (int i = pagination.getStartPageOnScreen(); i <= pagination.getEndPageOnScreen(); i++){
             if (pagination.getPage() == i){
         %>
-          <li class="page-item"><a class="page-link active" href="/board/list?page=<%=i%>"><%=i%></a></li>
+          <li class="page-item"><a class="page-link active" href="/board/list?page=<%=i%>&search=<%=search%>&keyword=<%=keyword%>"><%=i%></a></li>
 
           <%} else {%>
-          <li class="page-item"><a class="page-link" href="/board/list?page=<%=i%>"><%=i%></a></li>
+          <li class="page-item"><a class="page-link" href="/board/list?page=<%=i%>&search=<%=search%>&keyword=<%=keyword%>"><%=i%></a></li>
           <%}}%>
 
         <%
@@ -87,14 +92,14 @@
         %>
 
           <li class="page-item">
-            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen() + 1%>">Next</a>
+            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen() + 1%>&search=<%=search%>&keyword=<%=keyword%>">Next</a>
           </li>
 <%--          <li class="page-item">--%>
 <%--            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen()+1%>">Next</a>--%>
 <%--          </li>--%>
         <%} else {%>
           <li class="page-item disabled">
-            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen()+1%>">Next</a>
+            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen()+1%>&search=<%=search%>&keyword=<%=keyword%>">Next</a>
           </li>
         <%}%>
 

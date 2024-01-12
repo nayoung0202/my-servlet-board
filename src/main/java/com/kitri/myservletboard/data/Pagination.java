@@ -59,6 +59,7 @@ public class Pagination {
 
         // default = false 이므로 따로 적지 않아도 된다.
         if (this.endPageOnScreen < totalPages){
+            //totalPages는 다른 메소드 안에 있는 객체가 아니므로 this를 사용하지 않아도 된다.
             this.hasNext = true;
         }
 

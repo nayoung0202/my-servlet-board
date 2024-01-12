@@ -84,4 +84,6 @@ public class Board {
     public void setCommentCount(int commentCount) {
         this.commentCount = commentCount;
     }
+
+
 }

@@ -29,6 +29,18 @@ public class BoardService {
     }
 
 
+    public ArrayList<Board> getBoards(String search, String keyword, Pagination pagination) {
+
+        pagination.setTotalRecords(((BoardJdbcDao)boardDao).count()); //토탈 레코드의 값을 계산
+        pagination.calcPagination(); //계산하는 메소드
+
+        return boardDao.getAll(search, keyword, pagination);
+
+    }
+
+
+
+
     public static BoardService getInstance(){return instance;}
     //게시판 리스트 가져오는 로직
 

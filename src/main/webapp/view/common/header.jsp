@@ -17,6 +17,20 @@
             <li><a href="/view/member/registration.jsp">회원정보수정</a></li>
             <li><a href="/view/member/login.jsp">로그인</a></li>
         </ul>
+
+
+        <form class="d-flex" role="search" action="/board/list?" method="post">
+
+            <%--작성자 / 제목이 전달됨--%>
+            <select class="SelectSearch" name="search">
+                <option value="writer">작성자</option>
+                <option value="title">제목</option>
+            </select>
+
+            <%--키워드가 전달됨--%>
+            <input type="text" name="keyword">
+            <button class="btn btn-outline-success" type="submit">Search</button>
+        </form>
     </nav>
 </header>
 
