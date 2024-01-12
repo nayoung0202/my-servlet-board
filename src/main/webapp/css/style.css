@@ -259,8 +259,8 @@ header {
     box-shadow: 0 2px 2px rgba(0, 0, 0, 0.05), 0 1px 0 rgba(0, 0, 0, 0.05);
 }
 
-form {
-    margin-right: 20px;
+.d-flex {
+    text-align: left;
     width: 40%;
     float: right;
 }

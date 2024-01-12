@@ -89,8 +89,14 @@ public class BoardMemoryDao implements BoardDao {
     }
 
     @Override
+    public ArrayList<Board> getAll(String search, String keyword, Pagination pagination, String dateTime) {
+        return null;
+    }
+
+    @Override
     public ArrayList<Board> getAll(String search, String keyword, Pagination pagination) {
         return null;
     }
+
 }
 

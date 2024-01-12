@@ -62,15 +62,20 @@ public class BoardController extends HttpServlet {
 //            //writer 또는 title 의 정보 가져오기
             String search = request.getParameter("search");
             String keyword = request.getParameter("keyword");
+            String  dateTime = request.getParameter("dateTime");
+
+            // 조건문 작성 : search 와 keyword의 값이 null값일 경우
 
 
-            ArrayList<Board> boards = boardService.getBoards(search, keyword, pagination);
+
+            ArrayList<Board> boards = boardService.getBoards(search, keyword, pagination, dateTime);
 
             //*(3) pagination 정보를 가져와서 페이지바의 활성화 비활성화를 결정
             request.setAttribute("pagination", pagination);
 
-            // 전체 조회를 하는 Boards의 길이 (size)를 받아서 전체 레코드의 수 가져오기
+//            // 전체 조회를 하는 Boards의 길이 (size)를 받아서 전체 레코드의 수 가져오기
 //            pagination.setTotalRecords(boardService.getBoards(Integer.parseInt()));
+            request.setAttribute("dateTime", dateTime);
 
             request.setAttribute("search", search);
             request.setAttribute("keyword", keyword);
@@ -78,6 +83,7 @@ public class BoardController extends HttpServlet {
             request.setAttribute("boards", boards);
             // 데이터를 가져와 저장후 jsp에 넘겨주는 역할 -> dispatcher
             //jsp에게 넘겨줘야 함 - 게시판을 동적으로 만듦
+
 
 
             view += "list.jsp";
