@@ -1,12 +1,14 @@
 package com.kitri.myservletboard.data;
 
 import com.kitri.myservletboard.dao.BoardDao;
+import com.kitri.myservletboard.dao.BoardJdbcDao;
 import com.kitri.myservletboard.dao.BoardMemoryDao;
 
 import java.util.ArrayList;
 
 public class BoardService {
-    BoardDao boardDao = BoardMemoryDao.getInstance();
+//    BoardDao boardDao = BoardMemoryDao.getInstance();
+BoardDao boardDao = BoardJdbcDao.getInstance();
     private BoardService(){};
 
     // 싱글톤

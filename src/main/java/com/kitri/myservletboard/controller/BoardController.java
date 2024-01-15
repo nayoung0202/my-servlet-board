@@ -57,7 +57,7 @@ public class BoardController extends HttpServlet {
             String title = request.getParameter("title");
             String writer = request.getParameter("writer");
 
-            Board board = new Board(null, title,content, writer, LocalDateTime.now(), 0, 0);
+            Board board = new Board(null, title, content, writer, LocalDateTime.now(), 0, 0);
             boardService.addBoard(board);
             response.sendRedirect("/board/list");
             return;
@@ -78,29 +78,28 @@ public class BoardController extends HttpServlet {
             String title = request.getParameter("title");
 
 
-            boardService.updateBoard(new Board(id,title, content, null, LocalDateTime.now(), 0 , 0));
-            //writer는 바꾸지 않기 때문에 null값을 주지 않아도 된다.
+            boardService.updateBoard(new Board(id, title, content, null, LocalDateTime.now(), 0 , 0));
+            //writer는 바꾸지 않기 때문에 null값을 줘도 된다.
 
             response.sendRedirect("/board/list");
             return;
 
         } else if (command.equals("/board/delete")) {
-            Long id = Long.parseLong(getInitParameter("id"));
-            String content = request.getParameter("content");
-            String title = request.getParameter("title");
-            String writer = request.getParameter("writer");
+            Long id = Long.parseLong(request.getParameter("id"));
+            //게시글 삭제하기는 id의 값을 가져와 BoardService에서 게시물 삭제를 실행하고 가져와서 list.jsp 로 보내준다.
 
-            boardService.deleteBoard(new Board(id,content, title, writer, LocalDateTime.now(), 0, 0));
+            boardService.deleteBoard(new Board(id,null, null, null, LocalDateTime.now(), 0, 0));
 
             response.sendRedirect("/board/list");
             return;
 
 
         } else if (command.equals("/board/detail")) {
-            Board board = boardService.getBoard(Long.parseLong(request.getParameter("id")));
+            Long id = Long.parseLong(request.getParameter("id"));
+            Board board = boardService.getBoard(id);
             request.setAttribute("board", board);
-            view += "detail.jsp";
 
+            view += "detail.jsp";
         }
 
         //뷰(페이지)를 응답하는 방법

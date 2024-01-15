@@ -1,6 +1,7 @@
 package com.kitri.myservletboard.dao;
 
 import com.kitri.myservletboard.data.Board;
+import com.kitri.myservletboard.data.Pagination;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -9,11 +10,11 @@ public class BoardMemoryDao implements BoardDao {
     // 싱글톤 : 메모리 절약을 위해 인스턴스가 필요할 때 똑같은 인스턴스를 새로 만들지 않고 기존의 인스턴스르 가져와 활용하는 기법
     // 생성자 메서드에 privat 키워드를 붙여서 클래스를 외부에서 마구잡이로 new 생성자를 통해 인스턴스화 하는 것을 제한한다.
 
-    private static final BoardMemoryDao instace = new BoardMemoryDao();
+    private static final BoardMemoryDao instance = new BoardMemoryDao();
 
 
     public static BoardMemoryDao getInstance() {
-        return instace;
+        return instance;
     }
 
     ArrayList<Board> memoryBoardDB = new ArrayList<>();
@@ -36,10 +37,10 @@ public class BoardMemoryDao implements BoardDao {
         return memoryBoardDB;
     }
 
-    // memoryBoardDB에 있는 id가 입력받은 id와 같은지 비교
-    // findFirst().get() => 일치하는 요소들 중에 맨 처음 값을 리턴
     @Override
     public Board getById(Long id) {
+        // memoryBoardDB에 있는 id가 입력받은 id와 같은지 비교
+        // findFirst().get() => 일치하는 요소들 중에 맨 처음 값을 리턴
         return memoryBoardDB.stream().filter(board -> {
             return board.getId() == id;
         }).findFirst().get();
@@ -81,5 +82,10 @@ public class BoardMemoryDao implements BoardDao {
     public void delete(Board board) {
         Board board1 = getById(board.getId());
         memoryBoardDB.remove(board1);
+    }
+
+    @Override
+    public ArrayList<Board> getAll(Pagination pagination) {
+        return null;
     }
 }
