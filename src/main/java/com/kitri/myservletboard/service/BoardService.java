@@ -7,6 +7,7 @@ import com.kitri.myservletboard.data.Board;
 import com.kitri.myservletboard.data.Pagination;
 
 import javax.swing.plaf.IconUIResource;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.concurrent.atomic.AtomicBoolean;
 
@@ -26,6 +27,32 @@ public class BoardService {
         pagination.calcPagination(); //계산하는 메소드
 
         return boardDao.getAll(pagination);
+    }
+
+
+    public ArrayList<Board> getBoards(String search, String keyword, Pagination pagination) {
+
+        pagination.setTotalRecords(((BoardJdbcDao)boardDao).count(search, keyword)); //토탈 레코드의 값을 계산
+        pagination.calcPagination(); //계산하는 메소드
+
+        return boardDao.getAll(search, keyword, pagination);
+
+    }
+    public ArrayList<Board> getBoards(String search, String keyword, Pagination pagination, String dateTime) {
+
+        pagination.setTotalRecords(((BoardJdbcDao)boardDao).count(search, keyword, dateTime)); //토탈 레코드의 값을 계산
+        pagination.calcPagination(); //계산하는 메소드
+
+        return boardDao.getAll(search, keyword, pagination, dateTime);
+
+    }
+    public ArrayList<Board> getBoards(String search, String keyword, Pagination pagination, String dateTime, String firstdata) {
+
+        pagination.setTotalRecords(((BoardJdbcDao)boardDao).count(search, keyword, dateTime)); //토탈 레코드의 값을 계산
+        pagination.calcPagination(); //계산하는 메소드
+
+        return boardDao.getAll(search, keyword, pagination, dateTime, firstdata);
+
     }
 
 
