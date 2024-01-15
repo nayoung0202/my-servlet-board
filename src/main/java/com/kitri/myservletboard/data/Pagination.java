@@ -32,14 +32,16 @@ public class Pagination {
         //알고 있는 정보 : 현재 페이지 정보 + 한 페이지에서 보여주는 게시물 = 10, 페이지바의 최대 갯수 = 5 + 총 레코드 수 = 12
 
         // 게시물 갯수가 101 -> 11개 , 100 -> 10개
-        //전체 페이지 수
+        //**전체 페이지 수 구하기
         //자동 형변환 되므로 올림을 하려면 double로 바꿔줘야 한다.
         int totalPages = ((int)Math.ceil((double) this.totalRecords / this.maxRecordsPerPage));
 
+        // **첫 번째 페이지 구하기
         // 자동형변환으로 double로 변경
         this.startPageOnScreen =
                 ((int)Math.ceil((double) this.Page / this.maxpagesOnScreen) - 1) * this.maxpagesOnScreen + 1;
 
+        // 마지막 페이지 구하기
         //첫 페이지 =1 , 마지막 페이지 = 5,
         // if, (1,5) 이면 1+5 -1 = 5 이고 (6,10) 이면 6+5-1 = 15 이고 (11, 20) 이면 11+5-1 = 15 이 나온다.
         //maxpageOnScreen = 5 -> 고정값
@@ -57,6 +59,7 @@ public class Pagination {
 
         // default = false 이므로 따로 적지 않아도 된다.
         if (this.endPageOnScreen < totalPages){
+            //totalPages는 다른 메소드 안에 있는 객체가 아니므로 this를 사용하지 않아도 된다.
             this.hasNext = true;
         }
 

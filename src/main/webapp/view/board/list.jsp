@@ -6,6 +6,23 @@
 <!DOCTYPE html>
 <html lang="en">
 
+<%
+  Pagination pagination = (Pagination) request.getAttribute("pagination");
+  String search = (String) request.getAttribute("search");
+  String keyword = (String) request.getAttribute("keyword");
+  String dateTime = (String) request.getParameter("dateTime");
+
+  //조건 : keyword가 null이 아니면 keyword가 null이면 공백의 값을 보내서 다음 페이지로 갔을 때 search와 keyword의 값이 전달되지 않게 한다.
+  //
+  String params = "";
+  if (keyword != null) {
+    params += "&search=" + search + "&keyword=" + keyword + "&dateTime=" + dateTime;
+  } else {
+    keyword = "";
+  }
+%>
+
+
 <jsp:include page="/view/common/head.jsp">
   <jsp:param name="title" value="게시판 목록"/>
 </jsp:include>
@@ -13,7 +30,11 @@
 
 <body>
 <%-- 동적 jsp 리팩토링 --%>
-<jsp:include page="/view/common/header.jsp"/>
+<jsp:include page="/view/common/header.jsp">
+  <jsp:param name="search" value="<%=search%>"/>
+  <jsp:param name="keyword" value="<%=keyword%>"/>
+  <jsp:param name="dateTime" value="<%=dateTime%>"/>
+</jsp:include>
 
   <div>
     <h2 style="text-align: center; margin-top: 100px;"><b>게시판 목록</b></h2>
@@ -37,13 +58,12 @@
 
         <tr>
             <th scope ="row"> <%= boards.get(i).getId() %> </th>
-          <td> <a href="/board/detail?id=<%= boards.get(i).getId() %>" ><%= boards.get(i).getTitle() %></a></td>
+          <td> <a href="/board/detail?id=<%= boards.get(i).getId() %>"><%= boards.get(i).getTitle() %></a></td>
             <td> <%= boards.get(i).getWriter() %> </td>
-            <td> <%= boards.get(i).getCreatedAt().format(DateTimeFormatter.ofPattern("YYYY-MM-DD/HH:MM")) %> </td>
+            <td> <%= boards.get(i).getCreatedAt().format(DateTimeFormatter.ofPattern("YYYY-MM-dd/HH:MM")) %> </td>
           <td> <%= boards.get(i).getViewCount() %> </td>
             <td> <%= boards.get(i).getCommentCount() %> </td>
           </tr>
-
         <% } %>
 
         </tbody>
@@ -54,21 +74,22 @@
       <div class="d-flex justify-content-center">
       <nav aria-label="Page navigation example">
         <ul class="pagination pagination-sm">
-
+          <%--위에서 객체를 선언해주면 아래에서도 가져다가 쓸 수 있다.--%>
 
           <%--pagination에서 hasNext, hasPrev를 getter를 만들어 준다.--%>
           <%-- pagination은 이미 선언되어 있어서 뒤에서 또 쓸 수 있다.--%>
-          <%
-            Pagination pagination = (Pagination) request.getAttribute("pagination");
-            if (pagination.isHasPrev()){
-          %>
+
+            <%
+              if (pagination.isHasPrev()){
+            %>
+
             <li class="page-item">
               <%--첫 번째 페이지에서 -1을 하면 이전 페이지로 이동--%>
-              <a class="page-link" href="/board/list?page=<%=pagination.getStartPageOnScreen()-1%>" tabindex="-1" aria-disabled="true">Previous</a>
+              <a class="page-link" href="/board/list?page=<%=pagination.getStartPageOnScreen()-1%><%=params%>" tabindex="-1" aria-disabled="true">Previous</a>
             </li>
           <%} else {%>
             <li class="page-item disabled">
-            <a class="page-link" href="/board/list?page=<%=pagination.getStartPageOnScreen()-1%>" tabindex="-1" aria-disabled="true">Previous</a>
+            <a class="page-link" href="/board/list?page=<%=pagination.getStartPageOnScreen()-1%><%=params%>" tabindex="-1" aria-disabled="true">Previous</a>
         <%}%>
 
 
@@ -76,10 +97,10 @@
           for (int i = pagination.getStartPageOnScreen(); i <= pagination.getEndPageOnScreen(); i++){
             if (pagination.getPage() == i){
         %>
-          <li class="page-item"><a class="page-link active" href="/board/list?page=<%=i%>"><%=i%></a></li>
+          <li class="page-item"><a class="page-link active" href="/board/list?page=<%=i%><%=params%>"><%=i%></a></li>
 
           <%} else {%>
-          <li class="page-item"><a class="page-link" href="/board/list?page=<%=i%>"><%=i%></a></li>
+          <li class="page-item"><a class="page-link" href="/board/list?page=<%=i%><%=params%>"><%=i%></a></li>
           <%}}%>
 
         <%
@@ -87,14 +108,14 @@
         %>
 
           <li class="page-item">
-            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen() + 1%>">Next</a>
+            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen() + 1%><%=params%>">Next</a>
           </li>
 <%--          <li class="page-item">--%>
 <%--            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen()+1%>">Next</a>--%>
 <%--          </li>--%>
         <%} else {%>
           <li class="page-item disabled">
-            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen()+1%>">Next</a>
+            <a class="page-link" href="/board/list?page=<%=pagination.getEndPageOnScreen()+1%><%=params%>">Next</a>
           </li>
         <%}%>
 
