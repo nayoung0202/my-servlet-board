@@ -19,5 +19,7 @@ public interface BoardDao {
 
     public ArrayList<Board> getAll(String search, String keyword, Pagination pagination, String dateTime);
 
+    public ArrayList<Board> getAll(String search, String keyword, Pagination pagination, String dateTime, String firstdata);
+
     public ArrayList<Board> getAll(String search, String keyword, Pagination pagination);
 }

@@ -49,26 +49,47 @@ public class BoardController extends HttpServlet {
 
             //*(2)pagination!!=> page id 가져오기 -> /board/list?page = 3 을 읽어야 됨
             String page = request.getParameter("page");
-
-
             //page의 값이 아무것도 없을 경우
-            if (page == null) {
+            if (page == null || page == "") {
                 page = "1";
             }
 
-            // 가져와서 쓸 수 있게 paginaiton을 선언
-            Pagination pagination = new Pagination(Integer.parseInt(page));
+            String number = request.getParameter("number");
+            //default값을 넣어줌
+            if (number == null){
+                number = "10";
+            }
 
 //            //writer 또는 title 의 정보 가져오기
             String search = request.getParameter("search");
+            if (search == null || search == "") {
+                search = "title";
+            }
             String keyword = request.getParameter("keyword");
+            if (keyword == null || keyword == "") {
+                keyword = "";
+            }
             String  dateTime = request.getParameter("dateTime");
+            if (dateTime == null || dateTime == "") {
+                dateTime = "100 YEAR";
+            }
+            String firstdata = request.getParameter("firstdata");
+            if (firstdata == null){
+                firstdata = "createdAtdesc";
+            }
+
+
+
+
+
+            // 가져와서 쓸 수 있게 paginaiton을 선언
+            //pagination안에 maxRecodesPerPage의 값이 number의 값이므로
+            Pagination pagination = new Pagination(Integer.parseInt(page), Integer.parseInt(number));
+
 
             // 조건문 작성 : search 와 keyword의 값이 null값일 경우
 
-
-
-            ArrayList<Board> boards = boardService.getBoards(search, keyword, pagination, dateTime);
+            ArrayList<Board> boards = boardService.getBoards(search, keyword, pagination, dateTime, firstdata);
 
             //*(3) pagination 정보를 가져와서 페이지바의 활성화 비활성화를 결정
             request.setAttribute("pagination", pagination);
@@ -79,6 +100,7 @@ public class BoardController extends HttpServlet {
 
             request.setAttribute("search", search);
             request.setAttribute("keyword", keyword);
+            request.setAttribute("firstdata", firstdata);
 
             request.setAttribute("boards", boards);
             // 데이터를 가져와 저장후 jsp에 넘겨주는 역할 -> dispatcher

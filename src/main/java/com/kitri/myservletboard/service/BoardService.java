@@ -46,6 +46,14 @@ public class BoardService {
         return boardDao.getAll(search, keyword, pagination, dateTime);
 
     }
+    public ArrayList<Board> getBoards(String search, String keyword, Pagination pagination, String dateTime, String firstdata) {
+
+        pagination.setTotalRecords(((BoardJdbcDao)boardDao).count(search, keyword, dateTime)); //토탈 레코드의 값을 계산
+        pagination.calcPagination(); //계산하는 메소드
+
+        return boardDao.getAll(search, keyword, pagination, dateTime, firstdata);
+
+    }
 
 
     public static BoardService getInstance(){return instance;}

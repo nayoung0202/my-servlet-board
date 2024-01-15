@@ -4,7 +4,7 @@ public class Pagination {
     // 요청하는 페이지
     private int Page;
     // 최대 몇 개까지 레코드를 보여주는지 -> 고정값
-    private int maxRecordsPerPage = 10;
+    private int maxRecordsPerPage;
     // 최대 몇 개의 페이지 번호를 보여준다. -> 고정값
     private  int maxpagesOnScreen = 5;
     //조회할 게스트 레코드가 시작하는 DB의 시작점
@@ -73,8 +73,9 @@ public class Pagination {
 
     }
 
-    public Pagination(int Page) {
-        this.Page = Page;
+    //Controller에서 가져와서 쓸 수 있게 생성자를 생성함
+    public Pagination(int Page, int maxRecordsPerPage) {
+        this.Page = Page; this.maxRecordsPerPage = maxRecordsPerPage;
     }
 
     public int getPage() {
