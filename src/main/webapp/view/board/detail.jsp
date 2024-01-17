@@ -59,18 +59,29 @@
                     &nbsp
                     <a href="/board/list" class="btn btn-secondary btn-sm"><small>목록으로</small></a>
                     &nbsp
-                </div>
+                </div >
 
+                <%
+                    if (memberLogin != null) {
+                        if (memberLogin.getId().equals(board.getMember_id())) {
+                %>
                 &nbsp
                 &nbsp
                 <small>댓글 달기</small>
                 &nbsp
                 &nbsp
+                <form action="/comment/detail">
+                <div >
+                <input type="text" class="h-100 form-control bg-white" id="comment" name="comment" value="">
+                    <input type="text" name="board_id" value="${board.getId()}" hidden>
+                    <input type="text" name="member_id" value="${memberLogin.getId()}" hidden>
+                    <button type="submit">제출하기</button>
+                    <%      }
+                    }
+                    %>
 
-                <div>
-                <textarea class="h-100 form-control bg-white" id="comment" name="comment"
-                          disabled>${board.getContent()}</textarea>
                 </div>
+                </form>
 
             </div>
         </div>

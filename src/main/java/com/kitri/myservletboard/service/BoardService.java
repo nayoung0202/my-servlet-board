@@ -18,6 +18,7 @@ public class BoardService {
     BoardDao boardDao = BoardJdbcDao.getInstance();
     private BoardService() {};
     private static final BoardService instance = new BoardService();
+    private static final CommentService commentService = CommentService.getInstance();
 
 
     //Pagination의
@@ -61,8 +62,11 @@ public class BoardService {
 
 
     public Board getBoard(Long id){
+        commentService.getAllByBoardId(id);
         return boardDao.getById(id);
     }
+    //Board의 id를가져와서 commentService의 getAllByBoardId 메소드로 id를 보낸다.
+    //CommentService의 싱글톤을 선언한다. (인스턴스)
 
     public ArrayList<Board> getBoards() {
         return boardDao.getAll();
