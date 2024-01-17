@@ -36,7 +36,6 @@ public class BoardController extends HttpServlet {
         String contextPath = request.getContextPath(); // /
         String command = resquestURI.substring(contextPath.length()); // /board/list
         String view = "/view/board/";
-        //substring :
 
         out.println("command = " + command); // /board/create, command = /board/create
 
