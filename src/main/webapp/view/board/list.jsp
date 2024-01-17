@@ -2,6 +2,7 @@
 <%@ page import="com.kitri.myservletboard.data.Board" %>
 <%@ page import="java.time.format.DateTimeFormatter" %>
 <%@ page import="com.kitri.myservletboard.data.Pagination" %>
+<%@ page import="com.kitri.myservletboard.data.Member" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="en">
@@ -89,7 +90,7 @@
             <th scope ="row"> <%= boards.get(i).getId() %> </th>
           <td> <a href="/board/detail?id=<%= boards.get(i).getId() %>"><%= boards.get(i).getTitle() %></a></td>
             <td> <%= boards.get(i).getWriter() %> </td>
-            <td> <%= boards.get(i).getCreatedAt().format(DateTimeFormatter.ofPattern("YYYY-MM-dd/HH:MM")) %> </td>
+            <td> <%= boards.get(i).getCreatedAt().format(DateTimeFormatter.ofPattern("yyyy-MM-dd/HH:mm")) %> </td>
           <td> <%= boards.get(i).getViewCount() %> </td>
             <td> <%= boards.get(i).getCommentCount() %> </td>
           </tr>
@@ -98,7 +99,14 @@
         </tbody>
       </table>
       <div>
-        <a href="/board/createForm" role="button" class="btn btn-outline-dark">글쓰기</a>
+        <%
+          Member memberLogin = (Member) session.getAttribute("memberLogin");
+          if (memberLogin != null){
+            if (memberLogin.getUserId() != null)
+            {%>
+          <a href="/board/createForm" role="button" class="btn btn-outline-dark">글쓰기</a>
+          <%}}%>
+
       </div>
       <div class="d-flex justify-content-center">
       <nav aria-label="Page navigation example">

@@ -1,7 +1,7 @@
+<%@ page import="com.kitri.myservletboard.data.Member" %>
 <%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8" %>
 <!DOCTYPE html>
 <html lang="ko">
-
 
   <jsp:include page="/view/common/head.jsp">
     <jsp:param name="title" value="게시물 등록"/>
@@ -11,6 +11,9 @@
 <body>
 <jsp:include page="/view/common/header.jsp"/>
 
+<%
+  Member memberLogin = (Member) session.getAttribute("memberLogin");
+%>
   <div class="container">
     <div class="input-form-backgroud row">
       <div class="input-form col-md-12 mx-auto">
@@ -18,7 +21,6 @@
         <hr>
         <br>
         <form class="validation-form" novalidate action="/board/create" method="post">
-
           <div class="mb-3">
             <label for="address">제목</label>
             <input name="title"  type="text" class="form-control" id="address" placeholder="제목을 입력해주세요" required>
@@ -26,11 +28,12 @@
               제목을 입력해주세요.
             </div>
           </div>
-
           <div class="row">
             <div class="col-md-6 mb-3">
               <label for="name">작성자</label>
-              <input name="writer" type="text" class="form-control" id="name" placeholder="" value="" required>
+              <input hidden = "hidden" name="memberId" value="<%=memberLogin.getId()%>">
+
+              <input name="writer" type="text" class="form-control" id="name" placeholder="" value="${memberLogin.getName()}" readonly>
               <div class="invalid-feedback">
                 작성자를 입력해주세요.
               </div>
@@ -44,8 +47,8 @@
 <%--            </div>--%>
           </div>
           <div class="mb-3">
-            <label for="contents" class="form-label">내용</label>
-            <textarea name="contents" id="contents" class="form-control" cols="30" rows="5" placeholder="내용을 입력해주세요"></textarea>
+            <label for="content" class="form-label">내용</label>
+            <textarea name="content" id="content" class="form-control" cols="30" rows="5" placeholder="내용을 입력해주세요"></textarea>
           </div>
           <br>
           <div class="row">
