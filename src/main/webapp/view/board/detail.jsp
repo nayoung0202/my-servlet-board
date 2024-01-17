@@ -1,3 +1,5 @@
+<%@ page import="com.kitri.myservletboard.data.Member" %>
+<%@ page import="com.kitri.myservletboard.data.Board" %>
 <%@ page language="java" contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"%>
 <!DOCTYPE html>
@@ -8,6 +10,8 @@
 
 <body class="sb-nav-fixed">
 <jsp:include page="/view/common/header.jsp"/>
+<%Board board = (Board) request.getAttribute("board");
+    Member memberLogin = (Member) session.getAttribute("memberLogin");%>
 
 <main class="mt-5 pt-5">
     <div class="container-fluid px-4 ">
@@ -40,15 +44,34 @@
                               disabled>${board.getContent()}</textarea>
                 </div>
                 <div class="d-flex flex-row-reverse mb-3 mr-3">
+                    <%
+                        if (memberLogin != null) {
+                            if (memberLogin.getId().equals(board.getMember_id())) {
+                    %>
                     &nbsp
                     &nbsp
                     <a href="/board/delete?id=${board.getId()}" class="btn btn-secondary btn-sm" onclick="return confirm('삭제하시겠습니까?')"><small>삭제하기</small></a>
                     &nbsp
                     <a href="/board/updateForm?id=${board.getId()}" class="btn btn-secondary btn-sm"><small>수정하기</small></a>
+                    <%      }
+                        }
+                    %>
                     &nbsp
                     <a href="/board/list" class="btn btn-secondary btn-sm"><small>목록으로</small></a>
                     &nbsp
                 </div>
+
+                &nbsp
+                &nbsp
+                <small>댓글 달기</small>
+                &nbsp
+                &nbsp
+
+                <div>
+                <textarea class="h-100 form-control bg-white" id="comment" name="comment"
+                          disabled>${board.getContent()}</textarea>
+                </div>
+
             </div>
         </div>
     </div>

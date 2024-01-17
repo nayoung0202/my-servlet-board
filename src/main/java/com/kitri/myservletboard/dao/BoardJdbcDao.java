@@ -283,9 +283,10 @@ public class BoardJdbcDao implements BoardDao{
                 LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
                 int viewCount = rs.getInt("view_count");
                 int commentCount = rs.getInt("comment_count");
+                Long member_id = rs.getLong("member_id");
 
                 // 브라우저에서 입력받은 데이터를 new Board로 생성자를 생성하여 저장한다.
-                board = new Board(id, title, content, writer, createdAt, viewCount, commentCount);
+                board = new Board(id, title, content, writer, createdAt, viewCount, commentCount, member_id);
                 //add 노필요
             }
 
@@ -316,7 +317,7 @@ public class BoardJdbcDao implements BoardDao{
 
         try {
             connection = connectDB();
-            String insertsql = "INSERT INTO board (title, content, writer) VALUES (?,?,?)";
+            String insertsql = "INSERT INTO board (title, content, writer, member_id) VALUES (?,?,?, ?)";
 //            rs = ps.executeQuery(insertsql);
             //원하는 쿼리문만 가져오고 동적으로 적용하기 위해 ?로 명령함
             ps = connection.prepareStatement(insertsql);
@@ -328,6 +329,7 @@ public class BoardJdbcDao implements BoardDao{
                 ps.setString(1, board.getTitle());
                 ps.setString(2, board.getContent());
                 ps.setString(3, board.getWriter());
+                ps.setLong(4, board.getMember_id());
                 ps.executeUpdate();
                 // Update()문을 사용하면 입력받은 데이터를 갱신할 수 있다.
 
@@ -669,9 +671,10 @@ public class BoardJdbcDao implements BoardDao{
                 LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
                 int viewCount = rs.getInt("view_count");
                 int commentCount = rs.getInt("comment_count");
+                long memberId = rs.getLong("member_id");
 
 
-                boards.add(new Board(id, title, content, writer, createdAt, viewCount, commentCount));
+                boards.add(new Board(id, title,  writer, content, createdAt, viewCount, commentCount, memberId));
             }
 
 
@@ -685,7 +688,7 @@ public class BoardJdbcDao implements BoardDao{
                 ps.close();
                 connection.close();
 
-            }catch ( Exception e){
+            }catch (Exception e){
                 e.printStackTrace();
             }
         }

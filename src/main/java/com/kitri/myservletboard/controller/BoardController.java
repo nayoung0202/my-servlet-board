@@ -114,6 +114,7 @@ public class BoardController extends HttpServlet {
             // 요청 : 게시글 등록 폼 화면
             // 응답 : 등록 폼으로 응답
 //            response.sendRedirect("/view/board/createFrom.html");
+
             view += "createForm.jsp";
 
         } else if (command.equals("/board/create")) {
@@ -122,11 +123,13 @@ public class BoardController extends HttpServlet {
             String title = request.getParameter("title");
             String content = request.getParameter("content");
             String writer = request.getParameter("writer");
+            String memberId = request.getParameter("memberId");
+
 
             // 생성자로 값을 주는 것 순서를 맞게 적어주기
             // 게시판 객체 생성
             // 정적 메소드 타입 => LocalDataTime.now() : 알아서 현재 시간을 나타냄
-            Board board = new Board(null, title, content, writer, LocalDateTime.now(), 0, 0);
+            Board board = new Board(null, title, content, writer, LocalDateTime.now(), 0, 0, Long.parseLong(memberId));
             boardService.addBoard(board);
 
             response.sendRedirect("/board/list");
@@ -159,19 +162,18 @@ public class BoardController extends HttpServlet {
 
 
             // updateboard메소드를 통해 수정된 데이터 ( boardService로 가서 boardService에서 BoardDao에 갔다가 상속받은 BoardMemory 또는 BoardJdbcDao에서 처리한다.)를 받아서 boardService에 덮어쓰기 한다.(업데이트)
-            boardService.updateBoard(new Board(id, title, content, writer, LocalDateTime.now(), 0, 0));
+            boardService.updateBoard(new Board(id, title, content, writer, LocalDateTime.now(), 0, 0, null));
 
             response.sendRedirect("/board/list");
             // 처리가 끝나면 list.jsp로 돌아간다.
             return;
-
 
         } else if (command.equals("/board/delete")) {
             //삭제할 때 필요한 데이터는 id를 식별자로 삭제하기 때문에 id만 가져오고 다른 데이터 값은 null로 한다.
             Long id = Long.parseLong(request.getParameter("id"));
             // 브라우저에서 id를 가져온다.
 
-            boardService.deleteBoard(new Board(id, null, null, null, LocalDateTime.now(), 0, 0));
+            boardService.deleteBoard(new Board(id, null, null, null, LocalDateTime.now(), 0, 0,null));
             //boardService에 가서 BoardDao로 가고 BoardDao를 상속받은 BoardMemory 또는 BoardJdbcDao로 간다.
             // BoardMemory로 간 id는 delete를 처리한다.
 

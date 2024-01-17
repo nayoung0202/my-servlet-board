@@ -1,4 +1,4 @@
-<%--
+<%@ page import="com.kitri.myservletboard.data.Member" %><%--
   Created by IntelliJ IDEA.
   User: kitri
   Date: 2024-01-09
@@ -15,7 +15,15 @@
             <%--            <li><a href="/board/updateForm">게시글수정</a></li>--%>
             <li><a href="/view/member/join.jsp">회원가입</a></li>
             <li><a href="/view/member/registration.jsp">회원정보수정</a></li>
-            <li><a href="/view/member/login.jsp">로그인</a></li>
+            <%
+                //        String isLoginFailed = (String) request.getAttribute("isLoginFailed");
+                Member memberLogin = (Member) session.getAttribute("memberLogin"); //세션의 id의 값을 가져옴%>
+
+                <%if (memberLogin != null){%>
+                <li><a href="/member/logout">로그아웃</a></li>
+                <%}else {%>
+                <li><a href="/member/loginForm">로그인</a></li>
+                <%}%>
 
             <div class="flex-fill"></div>
             <form class="d-flex pt-2 pb-3" role="search" action="/board/list?" method="post">
@@ -35,6 +43,7 @@
                     <%--param으로 search를 가져와서 title 또는 writer이면 selected를 실행해서 드롭다운에 제목 또는 작성자가 나오게 만든다.--%>
                     <option value="title" ${param.search == "title" ? "selected" : ""}>제목</option>
                     <option value="writer" ${param.search == "writer" ? "selected" : ""}>작성자</option>
+                    <%----%>
                 </select>
 
                 <%--키워드가 전달됨--%>

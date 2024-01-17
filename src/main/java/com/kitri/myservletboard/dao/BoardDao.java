@@ -6,6 +6,7 @@ import com.kitri.myservletboard.service.BoardService;
 
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+//쿼리 관련은 Dao, 컨트롤러는 정보를 받아서 view로 안내해주는 역할,
 
 public interface BoardDao {
     public ArrayList<Board> getAll();
