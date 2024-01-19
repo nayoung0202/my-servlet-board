@@ -1,11 +1,13 @@
 package com.kitri.myservletboard.dao;
 
 import com.kitri.myservletboard.data.Board;
+import com.kitri.myservletboard.data.Comment;
 
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 public class CommentJdbcDao implements CommentDao{
@@ -46,27 +48,33 @@ public class CommentJdbcDao implements CommentDao{
 
 
     @Override
-    public ArrayList<Board> getAllByBoardId(Long id) {
-        //댓글을 저장하는 메소드
+    public ArrayList<Comment> getAllByBoardId(Long id) {
+        //댓글 조회
 
         Connection connection = null;
         PreparedStatement ps = null;
         ResultSet rs = null;
 
-        ArrayList<Board> comment = new ArrayList<>();
+        ArrayList<Comment> comment = new ArrayList<>();
+
 
         try {
             connection = connectDB();
-//            String sql = "INSERT INTO board (title, content, writer, member_id) VALUES (?,?,?, ?)";
-//            ps = connection.prepareStatement(sql);
-//            rs = ps.executeQuery();
-//
-//            connection = connectDB();
-//            ps.setString(1, comment.getTitle());
-//            ps.setString(2, board.getContent());
-//            ps.setString(3, board.getWriter());
-//            ps.setLong(4, board.getMember_id());
-//            ps.executeUpdate();
+
+            String sql = "SELECT * FROM comment WHERE board_id = " + id;
+            //SELECT * FROM comment where board_id = 145;
+
+            ps = connection.prepareStatement(sql);
+            rs = ps.executeQuery();
+
+            while(rs.next()){
+                Long id1 = rs.getLong("id");
+                Long member_id = rs.getLong("member_id");
+                String content = rs.getString("content");
+                LocalDateTime created_at = rs.getTimestamp("created_at").toLocalDateTime();
+
+                comment.add(new Comment(id1, content, member_id, created_at));
+            }
 
 
         }catch (Exception e){
@@ -81,6 +89,67 @@ public class CommentJdbcDao implements CommentDao{
             }
         }
         return comment;
+    }
 
+    @Override
+    public void save(Long id , Long member_id, String content) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try {
+            connection = connectDB();
+            String insertsql = "INSERT INTO comment (board_id, member_id, content) VALUES (?,?,?)";
+            //INSERT INTO comment (board_id, member_id, content) values ("143", "6", "초콜릿에 어떤 성분이..?");
+            ps = connection.prepareStatement(insertsql);
+
+
+            connection = connectDB();
+
+            ps.setLong(1, id);
+            ps.setLong(2, member_id);
+            ps.setString(3, content);
+            ps.executeUpdate();
+
+
+        }catch (Exception e){
+
+        } finally {
+            try {
+                ps.close();
+                connection.close();
+
+            }catch ( Exception e){
+                e.printStackTrace();
+            }
+        }
+    }
+
+    @Override
+    public void delete(Long delete_id) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try {
+            connection = connectDB();
+
+            String query = "DELETE FROM comment WHERE id = ?";
+
+            ps = connection.prepareStatement(query);
+
+            ps.setLong(1, delete_id);
+            ps.executeUpdate();
+
+        }catch (Exception e){
+
+        } finally {
+            try {
+                ps.close();
+                connection.close();
+
+            }catch ( Exception e){
+                e.printStackTrace();
+                //예외처리하기 위한 명령어
+            }
+        }
     }
 }

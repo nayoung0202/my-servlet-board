@@ -217,6 +217,7 @@ public class BoardJdbcDao implements BoardDao{
                 LocalDateTime createdAt = rs.getTimestamp("created_at").toLocalDateTime();
                 int viewCount = rs.getInt("view_count");
                 int commentCount = rs.getInt("comment_count");
+
                 //괄호 안에는 무조건 소문자!!
 
                 //만든 어레이리스트 Board에 저장

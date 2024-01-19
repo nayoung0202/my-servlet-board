@@ -1,8 +1,11 @@
 package com.kitri.myservletboard.controller;
 
+import com.kitri.myservletboard.dao.CommentJdbcDao;
 import com.kitri.myservletboard.data.Board;
+import com.kitri.myservletboard.data.Comment;
 import com.kitri.myservletboard.data.Pagination;
 import com.kitri.myservletboard.service.BoardService;
+import com.kitri.myservletboard.service.CommentService;
 
 import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
@@ -21,6 +24,7 @@ import java.util.ArrayList;
 public class BoardController extends HttpServlet {
 
     BoardService boardService = BoardService.getInstance();
+    CommentService commentService = CommentService.getInstance();
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -185,13 +189,19 @@ public class BoardController extends HttpServlet {
 
 //            String quertyString = request.getQueryString();
 
-
+            //게시글 id
             Long id = Long.parseLong(request.getParameter("id"));
             Board board = boardService.getBoard(id);
+
+            ArrayList<Comment> comment = commentService.getAllByBoardId(id);
+            // 댓글 content, member_id, created_at 을 담고 있다.
+
             //board 데이터를 detail.jsp에 전달하기 위해 어딘가에(request) 담아져서 와야한다.
             // request로 브라우저에 id 값을 가져온다.
             // boardService를 통해
             request.setAttribute("board", board);
+
+            request.setAttribute("comment", comment);
 
             view += "detail.jsp";
         }

@@ -5,6 +5,7 @@ import com.kitri.myservletboard.data.Comment;
 import com.kitri.myservletboard.data.Pagination;
 import com.kitri.myservletboard.service.CommentService;
 
+import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,11 +13,13 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 
 @WebServlet("/comment/*")
 public class CommentController extends HttpServlet {
 
+    CommentService commentService = CommentService.getInstance();
     @Override
     protected void service(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
@@ -38,14 +41,31 @@ public class CommentController extends HttpServlet {
 
         if (command.equals("/comment/detail")) {
 
+            Long board_id = Long.parseLong(request.getParameter("board_id"));
+            Long member_id = Long.parseLong(request.getParameter("member_id"));
             String comment = request.getParameter("comment");
-            String board_id = request.getParameter("board_id");
-            String member_id = request.getParameter("member_id");
+            request.setAttribute("comment", comment);
 
-            Comment comment1 = new Comment(comment, board_id, member_id);
-            CommentService.saveBoard(comment1);
+            commentService.save(board_id, member_id, comment);
 
-            view += "detail.jsp";
+            response.sendRedirect("/board/detail?id=" + board_id);
+            return;
+
+//            view += "detail?id=" + board_id;
+            ///board/detail?id=142
+            //강사님 질문...
+        }else if (command.equals("/comment/delete")){
+
+            Long delete_id = Long.parseLong(request.getParameter("delete"));
+            Long board_id = Long.parseLong(request.getParameter("board_id"));
+
+            commentService.delete(delete_id);
+
+            response.sendRedirect("/board/detail?id=" + board_id);
+            return;
+
         }
+        RequestDispatcher dispatcher = request.getRequestDispatcher(view);
+        dispatcher.forward(request, response);
     }
 }
