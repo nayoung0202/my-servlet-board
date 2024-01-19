@@ -25,6 +25,12 @@
                 <li><a href="/member/loginForm">로그인</a></li>
                 <%}%>
 
+                <%if (memberLogin != null){%>
+            <li><a><%=memberLogin.getName()%>님 환영합니다!</a></li>
+                <%}else {%>
+
+                <%}%>
+
             <div class="flex-fill"></div>
             <form class="d-flex pt-2 pb-3" role="search" action="/board/list?" method="post">
 

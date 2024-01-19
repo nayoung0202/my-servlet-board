@@ -3,6 +3,7 @@ package com.kitri.myservletboard.service;
 import com.kitri.myservletboard.dao.BoardDao;
 import com.kitri.myservletboard.dao.BoardJdbcDao;
 import com.kitri.myservletboard.dao.BoardMemoryDao;
+import com.kitri.myservletboard.dao.CommentDao;
 import com.kitri.myservletboard.data.Board;
 import com.kitri.myservletboard.data.Pagination;
 
@@ -29,8 +30,6 @@ public class BoardService {
 
         return boardDao.getAll(pagination);
     }
-
-
     public ArrayList<Board> getBoards(String search, String keyword, Pagination pagination) {
 
         pagination.setTotalRecords(((BoardJdbcDao)boardDao).count(search, keyword)); //토탈 레코드의 값을 계산
@@ -55,8 +54,6 @@ public class BoardService {
         return boardDao.getAll(search, keyword, pagination, dateTime, firstdata);
 
     }
-
-
     public static BoardService getInstance(){return instance;}
     //게시판 리스트 가져오는 로직
 
@@ -67,6 +64,11 @@ public class BoardService {
     }
     //Board의 id를가져와서 commentService의 getAllByBoardId 메소드로 id를 보낸다.
     //CommentService의 싱글톤을 선언한다. (인스턴스)
+
+    public Board getId(Long id, Long member_id, String content){
+        commentService.save(id, member_id, content);
+        return boardDao.getById(id);
+    }
 
     public ArrayList<Board> getBoards() {
         return boardDao.getAll();

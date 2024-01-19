@@ -7,11 +7,15 @@ import java.util.ArrayList;
 
 public interface CommentDao{
 
+    //Board의 id와 Comment의 content, member_id 필요)
 
-    public static Comment save(String content) {
-        return null;
-    }
+    
 
 
-    public ArrayList<Board> getAllByBoardId(Long id);
+    public ArrayList<Comment> getAllByBoardId(Long id);
+
+
+    public void save(Long id, Long member_id, String content);
+
+    public void delete(Long delete_id);
 }

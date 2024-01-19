@@ -17,12 +17,18 @@ public class CommentService implements CommentDao {
         return instance;
     }
 
-    public static void saveBoard(Comment id) {
-        //CommentDao.getAllByBoardId(id);
-    }
-
-    public ArrayList<Board> getAllByBoardId(Long id) {
+    public ArrayList<Comment> getAllByBoardId(Long id) {
         return commentDao.getAllByBoardId(id);
     }
+
+    public void save(Long id, Long member_id, String comment) {
+        commentDao.save(id, member_id, comment);
+    }
+
+    public void delete(Long delete_id) {
+        commentDao.delete(delete_id);
+    }
+
+
 
 }
