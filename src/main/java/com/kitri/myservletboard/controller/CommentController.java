@@ -56,7 +56,7 @@ public class CommentController extends HttpServlet {
             //강사님 질문...
         }else if (command.equals("/comment/delete")){
 
-            Long delete_id = Long.parseLong(request.getParameter("delete"));
+            Long delete_id = Long.parseLong(request.getParameter("delete_id")); // 잘못된 id가 옴
             Long board_id = Long.parseLong(request.getParameter("board_id"));
 
             commentService.delete(delete_id);

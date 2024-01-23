@@ -203,6 +203,7 @@ public class BoardController extends HttpServlet {
 
             request.setAttribute("comment", comment);
 
+
             view += "detail.jsp";
         }
 

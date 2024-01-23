@@ -28,6 +28,9 @@ public class CommentService implements CommentDao {
     public void delete(Long delete_id) {
         commentDao.delete(delete_id);
     }
+    public void commentdelete(Long id){
+        commentDao.commentdelete(id);
+    }
 
 
 

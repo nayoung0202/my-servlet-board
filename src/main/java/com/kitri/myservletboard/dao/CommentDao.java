@@ -18,4 +18,5 @@ public interface CommentDao{
     public void save(Long id, Long member_id, String content);
 
     public void delete(Long delete_id);
+    public void commentdelete(Long id);
 }

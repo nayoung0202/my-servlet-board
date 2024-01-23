@@ -15,6 +15,7 @@
 <jsp:include page="/view/common/header.jsp"/>
 <% Board board = (Board) request.getAttribute("board");
     Member memberLogin = (Member) session.getAttribute("memberLogin");
+    Member member = (Member) request.getAttribute("member");
     ArrayList<Comment> comment = (ArrayList<Comment>) request.getAttribute("comment");
 %>
 
@@ -109,8 +110,8 @@
                             <td> <%= comment.get(i).getContent() %> </td>
                             <td> <%= comment.get(i).getCreated_at().format(DateTimeFormatter.ofPattern("yyyy-MM-dd/HH:mm")) %> </td>
                             <td><form action="/comment/delete" method="post"><button class="btn btn-secondary btn-sm" onclick="return confirm('삭제하시겠습니까?')"><small>댓글 삭제하기</small></button>
-                            <input  type="text" name="delete" value="${comment.get(i).getId()}" hidden>
-                                <input  type="text" name="board_id" value="${board.getId()}" hidden></form></td>
+                            <input type="text" name="delete_id" value="${comment.get(i).getId()}" hidden>
+                                <input type="text" name="board_id" value="${board.getId()}" hidden></form></td>
 
                         </tr>
                         <% } %>

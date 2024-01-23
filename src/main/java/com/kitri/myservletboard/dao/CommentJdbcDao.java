@@ -45,8 +45,6 @@ public class CommentJdbcDao implements CommentDao{
         //Connection 객체가 담긴 드라이버 매니저를 리턴
         // 예외가 없으면 리턴되어 디비와 연결됨
     }
-
-
     @Override
     public ArrayList<Comment> getAllByBoardId(Long id) {
         //댓글 조회
@@ -56,7 +54,6 @@ public class CommentJdbcDao implements CommentDao{
         ResultSet rs = null;
 
         ArrayList<Comment> comment = new ArrayList<>();
-
 
         try {
             connection = connectDB();
@@ -75,7 +72,6 @@ public class CommentJdbcDao implements CommentDao{
 
                 comment.add(new Comment(id1, content, member_id, created_at));
             }
-
 
         }catch (Exception e){
 
@@ -109,7 +105,6 @@ public class CommentJdbcDao implements CommentDao{
             ps.setLong(2, member_id);
             ps.setString(3, content);
             ps.executeUpdate();
-
 
         }catch (Exception e){
 
@@ -149,6 +144,34 @@ public class CommentJdbcDao implements CommentDao{
             }catch ( Exception e){
                 e.printStackTrace();
                 //예외처리하기 위한 명령어
+            }
+        }
+    }
+
+    @Override
+    public void commentdelete(Long id) {
+        Connection connection = null;
+        PreparedStatement ps = null;
+
+        try {
+            connection = connectDB();
+
+            String query = "DELETE FROM comment WHERE id = ?";
+
+            ps = connection.prepareStatement(query);
+
+            ps.setLong(1, id);
+            ps.executeUpdate();
+
+        }catch (Exception e){
+
+        } finally {
+            try {
+                ps.close();
+                connection.close();
+
+            }catch ( Exception e){
+                e.printStackTrace();
             }
         }
     }
